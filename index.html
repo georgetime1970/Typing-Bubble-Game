@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Typing Game</title>
+    <link rel="stylesheet" href="./css/game.css" />
+    <link rel="icon" href="will.ico" type="image" />
+    <script type="module" src="./js/game.js"></script>
+  </head>
+  <body>
+    <div class="box" id="box" tabindex="0"></div>
+    <audio id="bgm" src="./media/gameMusic.mp3" loop></audio>
+
+    <div class="start_page">
+      <div class="rules" style="padding-left: 20px">
+        <li style="display: grid; justify-content: center">
+          <h1>RULES</h1>
+        </li>
+        <li><b>1. </b>To Burst a bubble, type the letter shown in it.</li>
+        <li><b>2. </b>After missing six bubbles, the Game is over.</li>
+        <li><b>3. </b>Red and Green bubbles are faster than the white and will give a better score.</li>
+        <li><b>4. </b>To Pause or Start the Game Press Space-Bar Button</li>
+      </div>
+      <button id="start">START</button>
+      <div class="config">速度: <input type="text" name="speed" />毫秒</div>
+      <div class="config">
+        字符:
+        <textarea name="chararr" rows="3" cols="33"> </textarea>
+      </div>
+    </div>
+
+    <!-- 结束分数统计 -->
+    <div class="result">
+      <div id="score">Score:</div>
+      <button id="start_again">PLAY AGAIN</button>
+    </div>
+
+    <!-- 血条 -->
+    <div class="miss" id="miss_color"></div>
+
+    <!-- 实时分数 -->
+    <div class="score">分数: 0<br />最高分数: 1000</div>
+  </body>
+</html>
