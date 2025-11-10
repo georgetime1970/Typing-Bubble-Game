@@ -3,41 +3,19 @@ name: 🚀 Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # 监听 main 分支推送
-  workflow_dispatch: # 支持手动触发
-
-permissions: # 设置必要权限，让 Actions 有权写入 GitHub Pages
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency: #  确保同一时间只运行一个部署任务，避免冲突
-  group: 'pages'
-  cancel-in-progress: true
+      - main
 
 jobs:
-  deploy: # 可选,让部署过程在 GitHub 界面上更可视化、更规范化 的“装饰信息”
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v5 # 官方动作：拉取代码到虚拟机
+        uses: actions/checkout@v4
 
-      # ✅ 自动生成 CNAME 文件
-      - name: 🧾 Generate CNAME file
-        run: echo "typing.jiangyahan.com" > ./CNAME
-
-      # ✅ 上传静态资源
-      - name: 📦 Upload static files
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: ./
-
-      # ✅ 部署到 GitHub Pages
       - name: 🚀 Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          cname: typing.jiangyahan.com
