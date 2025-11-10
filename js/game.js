@@ -40,7 +40,7 @@ chararrConfig.value = chararr
 
 // 根据speed 实时加减分
 const scoreCount = () => {
-  if (1000 - speed >= 0) {
+  if (1000 - speed > 0) {
     return (1000 - speed) / 100
   } else {
     return 1
