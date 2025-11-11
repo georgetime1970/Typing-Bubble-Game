@@ -9,6 +9,7 @@ const miss_index_color = document.querySelector('#miss_color') // 血条界面
 const again = document.querySelector('#start_again') // 重新再来界面
 const speedConfig = document.querySelector('.config [name=speed]') // 自定义速度
 const chararrConfig = document.querySelector('.config [name=chararr]') // 自定义字符
+const chararrReset = document.querySelector('#reset') // 自定义字符
 
 // 音频资源
 const startBgm = new Audio('./media/button_sound.mp3') // 开始按钮
@@ -88,6 +89,12 @@ startbutton.addEventListener('click', startGame)
 // 重新再来游戏按钮
 again.addEventListener('click', startGame)
 
+// 重置字符集按钮
+chararrReset.addEventListener('click', () => {
+  chararr = 'abcdefghijklmnopqrstuvwxyz;,./'
+  localStorage.setItem('chararr', chararr) // 本地存储字符
+  chararrConfig.value = chararr
+})
 /**
  *
  * @returns 返回随机大小写字母
@@ -203,10 +210,18 @@ parent.addEventListener('keydown', (e) => {
     scoreEl.innerHTML = `分数: ${score}<br />最高分数: ${scoreMax}<br/>正确: ${typeRight}  错误: ${typeError}`
     alive_char = alive_char.replace(e.key, '')
     const targets = document.querySelectorAll(`[data-id="${e.key}"]`)
-    // 判断是否有红球 绿球元素,优先击破
+    // 判断是否有红球 绿球元素,优先击破,并额外加分
     for (const el of targets) {
-      if (el.style.backgroundColor === 'red' || el.style.backgroundColor === 'green') {
+      if (el.style.backgroundColor === 'red') {
         removeBall(el)
+        score += 9
+        scoreEl.innerHTML = `分数: ${score}<br />最高分数: ${scoreMax}<br/>正确: ${typeRight}  错误: ${typeError}`
+        return
+      }
+      if (el.style.backgroundColor === 'green') {
+        removeBall(el)
+        score += 4
+        scoreEl.innerHTML = `分数: ${score}<br />最高分数: ${scoreMax}<br/>正确: ${typeRight}  错误: ${typeError}`
         return
       }
     }
