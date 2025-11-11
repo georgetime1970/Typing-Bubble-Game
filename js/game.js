@@ -38,7 +38,10 @@ scoreEl.innerHTML = `最高分数: ${scoreMax}`
 speedConfig.value = speed
 chararrConfig.value = chararr
 
-// 根据speed 实时加减分
+/**
+ * 根据speed 实时加减分
+ * @returns 分数,大于1000毫秒的速度只返回1
+ */
 const scoreCount = () => {
   if (1000 - speed > 0) {
     return (1000 - speed) / 100
@@ -115,7 +118,7 @@ function rendint() {
 const create = () => {
   let newballchar = randChar() // 创建随机小球(字母)
   alive_char += newballchar // 添加到存活小球字符串中
-  // console.log(alive_char)
+  console.log(alive_char)
 
   // 使用自定义属性
   const fragment = document.createDocumentFragment()
@@ -156,11 +159,29 @@ const start_interval = (speed) => {
   startcreationinterval = setInterval(create, speed)
 }
 
+/**
+ * 移除小球
+ * @param el 目标元素
+ */
+const removeBall = (el) => {
+  // 停止godown动画，固定当前位置
+  const currentTop = el.offsetTop
+  el.style.top = currentTop + 'px'
+  el.style.animation = 'none'
+  el.style.animation = 'pop 0.1s ease-in-out'
+  const animationEndHandler = () => {
+    el.removeEventListener('animationend', animationEndHandler)
+    el.remove()
+  }
+  el.addEventListener('animationend', animationEndHandler)
+  typeBgm.play()
+}
+
 // 游戏开始,按键检测
 parent.addEventListener('keydown', (e) => {
   const alive_index = alive_char.indexOf(e.key)
-  console.log('e.key: ', e.key)
-  console.log(`e.code: ${e.code}`)
+  // console.log('e.key: ', e.key)
+  // console.log(`e.code: ${e.code}`)
 
   // indexOf() 方法返回字符第一次出现的位置索引；如果不存在，则返回 -1
   if (alive_index == -1) {
@@ -181,20 +202,17 @@ parent.addEventListener('keydown', (e) => {
     typeRight++ // 正确输入数量增加
     scoreEl.innerHTML = `分数: ${score}<br />最高分数: ${scoreMax}<br/>正确: ${typeRight}  错误: ${typeError}`
     alive_char = alive_char.replace(e.key, '')
-    const target = document.querySelector(`[data-id="${e.key}"]`)
-    if (target) {
-      // 停止godown动画，固定当前位置
-      const currentTop = target.offsetTop
-      target.style.top = currentTop + 'px'
-      target.style.animation = 'none'
-      target.style.animation = 'pop 0.1s ease-in-out'
-      const animationEndHandler = () => {
-        target.removeEventListener('animationend', animationEndHandler)
-        target.remove()
+    const targets = document.querySelectorAll(`[data-id="${e.key}"]`)
+    // 判断是否有红球 绿球元素,优先击破
+    for (const el of targets) {
+      if (el.style.backgroundColor === 'red' || el.style.backgroundColor === 'green') {
+        removeBall(el)
+        return
       }
-      target.addEventListener('animationend', animationEndHandler)
-      // target.remove()
-      typeBgm.play()
+    }
+    // 如果没有红/绿球，再移除普通球（第一个匹配的即可）
+    if (targets.length > 0) {
+      removeBall(targets[0])
     }
   }
 })
@@ -275,8 +293,8 @@ const miss_color_change = (i) => {
 // 窗口失焦暂停游戏
 window.addEventListener('blur', pause_game)
 window.addEventListener('keyup', (e) => {
-  console.log(e.key)
-
+  // console.log(e.key)
+  // 空格暂停游戏
   if (e.key == ' ') {
     if (isPause) {
       // 判断是否显示了结果页
