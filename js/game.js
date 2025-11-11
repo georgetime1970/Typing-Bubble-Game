@@ -62,7 +62,7 @@ const startGame = () => {
   }
   // 自定义字符
   if (chararrConfig.value != chararr) {
-    chararr = chararrConfig.value // 使用新自定义字符
+    chararr = chararrConfig.value.trim() // 使用新自定义字符
     localStorage.setItem('chararr', chararr) // 本地存储字符
   }
   parent.focus() // 自动聚焦
